@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- head태그는 페이지의 메타데이터를 포함 -->
+  <head>
+    <meta charset="UTF-8" />
+    <!-- meta charset은 문서의 문자 인코딩 방식을 명시 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- content속성에 명시된 값에 대한 http 헤더를 제공 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 사용자가 볼 수 있는 영역인 뷰포를 제어 -->
+    <title>Star Trek</title>
+    <!-- 페이지의 제목 -->
+
+    <!-- html태그를 꾸미는데 사용됨  -->
+    <style>
+      canvas {
+        background: #eef;
+        /* 배경화면이 #eef색 */
+        display: block;
+        margin: 0 auto;
+        /* margin이 위 아래는 0이고 좌우는 동일하게 되어서 가운데 정렬됨 */
+      }
+    </style>
+  </head>
+
+  <!-- body태그는 페이지의 몸통 -->
+  <body>
+    <h3>Star Trek v0.1</h3>
+    <!-- h3은 1~5크기 중 3번째 글자크기 -->
+    <hr />
+    <!-- hr은 줄선 -->
+    <canvas id="gameCanvas" width="480" height="320"></canvas>
+    <!-- canvas안에 컨텐츠를 넣을 수 있게 함 너비는 480 높이는 320 -->
+    <script>
+      // script태그에는 자바스크립트 코드가 들어감
+      var canvas = document.getElementById("gameCanvas");
+      // 요소 중 아이디가 "gameCanvas"를 찾아서 canvas에 할당
+      var ctx = canvas.getContext("2d");
+      // 2d 렌더링 컨텍스트를 할당
+
+      var rightPressed = false;
+      var leftPressed = false;
+
+      var shipSize = 40;
+      var shipImg = new Image();
+      shipImg.src = "./ship.png";
+
+      // ship객체
+      var ship = {
+        x: (canvas.width - shipSize) / 2, // ship x좌표
+        y: canvas.height - shipSize, // ship y좌표
+        w: shipSize, // ship너비
+        h: shipSize, // ship높이
+      };
+
+      var enemySize = 40;
+      var enemyImg = new Image();
+      enemyImg.src = "./ship.png";
+
+      var enemyCount = 10;
+      //적군 상태
+      var enemyStatus = [];
+
+      // 적군 총 10개(enemyCount)의 상태를 지정
+      // status 0이면 존재하지 않는 것
+      for (var i = 0; i < enemyCount; i++) {
+        enemyStatus[i] = {
+          x: 0,
+          y: 0,
+          w: enemySize,
+          h: enemySize,
+          img: enemyImg,
+          status: 0,
+        };
+      }
+
+      // addEventListener은 이벤트를 대상이 수신할 때마다 호출
+      // 키를 누를 경우 keyDownHandler 함수 실행
+      document.addEventListener("keydown", keyDownHandler, false);
+      // 키를 뗄 경우 keyUpHandler 함수 실행
+      document.addEventListener("keyup", keyUpHandler, false);
+
+      // document.addEventListener에서 호출한 함수
+      // ArrowRight(오른쪽 방향키)를 누를 경우 rightPressed는 true로 바뀜
+      // ArrowLeft(왼쪽 방향키)를 누를 경우 leftPressed는 true로 바뀜
+      function keyDownHandler(e) {
+        if (e.code === "ArrowRight") {
+          rightPressed = true;
+        } else if (e.code === "ArrowLeft") {
+          leftPressed = true;
+        }
+      }
+
+      // 위와 거의 동일하며 키를 뗄 경우 pressed가 false로 바뀜
+      function keyUpHandler(e) {
+        if (e.code === "ArrowRight") {
+          rightPressed = false;
+        } else if (e.code === "ArrowLeft") {
+          leftPressed = false;
+        }
+      }
+
+      // 내 ship이 enemy와 충돌했는지 확인하는 함수
+      // 부딪혔을 경우 1반환 아니면 0 반환
+      function checkCrash() {
+        // 총 enemy 수만큼 반복문을 돌면서
+        // enmey.status가 0이면 존재하지 않는 거니까 continue
+        for (var i = 0; i < enemyCount; i++) {
+          var enemy = enemyStatus[i];
+
+          if (enemy.status === 0) {
+            continue;
+          }
+
+          ship.rx = ship.x + ship.w;
+          ship.by = ship.y + ship.h;
+          enemy.rx = enemy.x + enemy.w;
+          enemy.by = enemy.y + enemy.h;
+
+          // 내 ship과 enemy가 충돌 시 1 반환
+          if ((ship.x >= enemy.x && ship.x <= enemy.rx) || (ship.rx >= enemy.x && ship.rx <= enemy.rx)) {
+            if ((ship.y >= enemy.y && ship.y <= enemy.by) || (ship.by >= enemy.y && ship.by < enemy.by)) {
+              return 1;
+            }
+          }
+        }
+        return 0;
+      }
+
+      // status가 0인 enemy에 대해 새롭게 생성
+      function createNewEnemy(probWeight, gameLevel) {
+        // math.random이 0이상 1미만 무작위 수니까
+        // 0<=n<30 인 수가 n<gameLevel
+        // 그냥 무작위(시간?)로 생성되게 만듦
+        if (Math.floor(Math.random() * probWeight) < gameLevel) {
+          for (var i = 0; i < enemyCount; i++) {
+            var enemy = enemyStatus[i];
+
+            // 해당 enemy가 존재하지 않을 경우(status === 0)
+            if (enemy.status == 0) {
+              enemy.y = 0;
+
+              // x는 canvas 너비에 대해 무작위
+              enemy.x = Math.floor(Math.random() * canvas.width);
+
+              // canvas너비를 넘으면 canvas 끝으로
+              if (enemy.x + enemySize > canvas.width) {
+                enemy.x = canvas.width - enemySize;
+              }
+
+              // enemy가 존재하는 상태
+              enemy.status = 1;
+              break;
+            }
+          }
+        }
+      }
+
+      function drawAllEnemies() {
+        for (var i = 0; i < enemyCount; i++) {
+          var enemy = enemyStatus[i];
+
+          // 이미 존재하는 enenmy이므로 무시
+          if (enemy.status === 0) {
+            continue;
+          }
+
+          // enemy가 밑으로 내려감을 의미
+          enemy.y += 2;
+
+          // enemy가 유효한 범위에 있을 때 새롭게 그림
+          if (enemy.y + enemySize <= canvas.height) {
+            ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.w, enemy.h);
+          } else {
+            // enemy가 밑에 닿여 사라짐
+            enemy.status = 0;
+          }
+        }
+        // enemy생성
+        createNewEnemy(30, 1);
+      }
+
+      // canvas에 계속 그림(?)을 그려줌
+      function draw() {
+        // canvas를 초기화
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // enemy를 그림
+        drawAllEnemies();
+
+        // 내 ship를 그림
+        ctx.drawImage(shipImg, ship.x, ship.y, ship.w, ship.h);
+
+        // rightPressed와 leftPressed의 상태에 따라 ship의 x좌표를 이동시킴
+        // 만약 canvas 밖 범위라면 이동하지 않음
+        if (rightPressed && ship.x < canvas.width - shipSize) {
+          ship.x += 10;
+        } else if (leftPressed && ship.x > 0) {
+          ship.x -= 10;
+        }
+
+        // checkCrash가 1을 반환하면(부딪힌 경우)
+        if (checkCrash()) {
+          // Crash라는 텍스트를 x(10), y(20)에 띄움
+          ctx.fillText("Crash!", 10, 20);
+        }
+
+        // 브라우저에게 애니메이션을 알리고 다음 리페인트가 진행되기 전에 해당하는
+        // 애니메이션을 업데이트하는 함수를 호출
+        requestAnimationFrame(draw);
+      }
+
+      // draw 함수 실행
+      draw();
+    </script>
+  </body>
+</html>
