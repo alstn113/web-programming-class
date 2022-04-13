@@ -1,16 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+  <!-- head태그는 페이지의 메타데이터를 포함 -->
   <head>
+    <!-- meta charset은 문서의 문자 인코딩 방식을 명시 -->
     <meta charset="UTF-8" />
+    <!-- content속성에 명시된 값에 대한 http 헤더를 제공 -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 사용자가 볼 수 있는 영역인 뷰포를 제어 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- css link -->
     <link rel="stylesheet" href="../css/style.css" />
-    <title>Star Trek</title>
+    <!-- 아이콘 사용을 위한 font awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+    <!-- 페이지의 제목 -->
+    <title>MIDTERM PROJECT</title>
   </head>
   <body>
-    <h3>Star Trek v0.1</h3>
-    <hr />
-    <canvas id="gameCanvas" width="480" height="320"></canvas>
+    <!-- header 태그를 이용해서 페이지의 제목부분을 시멘틱하게 나타냄 -->
+    <header>
+      <h1 class="title"><i class="fas fa-gamepad"></i> MIDTERM PROJECT <i class="fas fa-gamepad"></i></h1>
+    </header>
+    <!-- main태그는 페이지의 주요한 내용을 담고 있음 -->
+    <main>
+      <!-- 랭킹 부분이 들어가는 왼쪽 aside태그 -->
+      <aside>
+        <div><i class="fas fa-trophy"></i> 랭킹</div>
+        <div id="rank"></div>
+      </aside>
+      <!-- 슈팅게임이 들어가는 canvas부분 -->
+      <canvas id="gameCanvas" width="1000" height="500"></canvas>
+      <!-- 점수와 현재 난이도 부분이 들어가는 오른쪽 aside태그 -->
+      <aside>
+        <div><i class="fas fa-coins"></i> 점수</div>
+        <div id="score"></div>
+        <div><i class="fas fa-star"></i> 현재 난이도</div>
+        <div id="difficulty"></div>
+      </aside>
+    </main>
+    <!-- 게임 방법과 게임 시작에 대한 모달창 -->
+    <div class="playModal">
+      <div>게임 방법</div>
+      <div><input type="text" id="playerName" maxlength="10" placeholder="사용자 이름 입력" /></div>
+      <button onclick="start()">게임 시작</button>
+    </div>
+    <!-- footer 태그를 이용해서 페이지의 꼬릿말 부분을 시멘틱하게 나타냄 -->
+    <footer>
+      <p>&copy;Copyright 2022 <a href="https://github.com/neko113" style="text-decoration: none; color: #fff">neko113</a> All rights reserved</p>
+    </footer>
   </body>
-  <script src="../js//startrek.js"></script>
+  <!-- javascript link -->
+  <script src="../js/startrek.js"></script>
 </html>

@@ -1,5 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Black Han Sans", sans-serif;
+}
+body {
+  background: white;
+}
+
+Header {
+  background: gray;
+}
+
+.title {
+  color: black;
+  text-align: center;
+  font-size: 4rem;
+}
+
+aside {
+  font-size: 1rem;
+  background: #2b2b2b;
+  width: 100%;
+  text-align: center;
+  padding-top: 1rem;
+}
+
+main {
+  display: flex;
+  color: #fff;
+  list-style-type: none;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: gray;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+@keyframes backgroundMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 500px;
+  }
+}
+
 canvas {
-  background: #eef;
+  background-image: url("../img/background.png");
+  animation: backgroundMove 2s infinite linear;
+  background-size: auto 100%;
   display: block;
   margin: 0 auto;
+}
+
+.playModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  text-align: center;
+  background-color: aliceblue;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.playModal button {
+  font-size: 3rem;
+  border-radius: 2rem;
+  background: #72a259;
+  color: #fff;
+  padding: 1rem;
+}
+
+.active {
+  visibility: hidden;
 }
