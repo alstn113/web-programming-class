@@ -21,11 +21,12 @@ let score;
 let playerName;
 let gameLevel;
 
-// 방향 키의 초기 값 설정
+// 방향 키와 총알 발사키(space)의 초기 값 설정
 let rightPressed = false;
 let leftPressed = false;
 let upPressed = false;
 let downPressed = false;
+let spacePressed = false;
 
 // 플레이어 Ship의 사이즈 및 이미지 경로 설정
 const shipSize = 50;
@@ -42,6 +43,16 @@ enemyImg.src = "../img/enemy.png";
 
 const enemyCount = 30;
 const enemyStatus = [];
+
+// 총알의 사이즈 및 이미지 경로 설정
+const bulletSize = 10;
+const bulletImg = new Image();
+bulletImg.src = "../img/bullet.png";
+
+// 총알 배열
+let bulletList = [];
+// 총알이 무한 발사되지 않게 조건을 걸어주기 위한 boolean값
+let canFire = true;
 
 // 게임 초기 설정 함수
 const initialState = () => {
@@ -69,11 +80,14 @@ const initialState = () => {
       status: 0,
     };
   }
+
+  // 게임 시작 시 총알 배열 초기화
+  bulletList = [];
 };
 
-// 플레이어 Ship의 4방향 이동에 관한 코드
+// 플레이어 Ship의 4방향 이동과 총알 발사(space)에 관한 코드
 
-// 방향키 오른쪽, 왼쪽, 위, 아래 키를 누르는 것에 대해 case값을 찾고, 특정 Pressed값을 true로 변경
+// 방향키 오른쪽, 왼쪽, 위, 아래, 스페이스 키를 누르는 것에 대해 case값을 찾고, 특정 Pressed값을 true로 변경
 const keyDownHandler = (e) => {
   switch (e.code) {
     case "ArrowRight":
@@ -88,10 +102,13 @@ const keyDownHandler = (e) => {
     case "ArrowDown":
       downPressed = true;
       break;
+    case "Space":
+      spacePressed = true;
+      break;
   }
 };
 
-// 방향키 오른쪽, 왼쪽, 위, 아래 키를 떼는 것에 대해 case값을 찾고, 특정 Pressed값을 false로 변경
+// 방향키 오른쪽, 왼쪽, 위, 아래, 스페이스 키를 떼는 것에 대해 case값을 찾고, 특정 Pressed값을 false로 변경
 const keyUpHandler = (e) => {
   switch (e.code) {
     case "ArrowRight":
@@ -105,6 +122,9 @@ const keyUpHandler = (e) => {
       break;
     case "ArrowDown":
       downPressed = false;
+      break;
+    case "Space":
+      spacePressed = false;
       break;
   }
 };
@@ -135,6 +155,28 @@ const checkCrash = () => {
   }
   // 모든 적 Ship에 대해 플레이어 Ship과 충돌하지 않았을 경우 false를 의미하는 0을 return함
   return 0;
+};
+
+// 적 Ship이 총알에 부딪혔는지 확인하는 함수
+const crashedByBullet = () => {
+  // 각각 enemy들이 모든 총알에 대해서 겹치는 부분이 있을 경우 enemy.status가 0이 되고 bulletLst에서 부딪힌 총알을 지움
+  for (const enemy of enemyStatus) {
+    enemy.rx = enemy.x + enemy.w;
+    enemy.by = enemy.y + enemy.h;
+    for (let i = 0; i < bulletList.length; i++) {
+      bulletList[i].rx = bulletList[i].x + bulletSize;
+      bulletList[i].by = bulletList[i].y + bulletSize;
+      if ((bulletList[i].x >= enemy.x && bulletList[i].x <= enemy.rx) || (bulletList[i].rx >= enemy.x && bulletList[i].rx <= enemy.rx)) {
+        if ((bulletList[i].y >= enemy.y && bulletList[i].y <= enemy.by) || (bulletList[i].by >= enemy.y && bulletList[i].by < enemy.by)) {
+          enemy.status = 0;
+          //bulletList에서 i인덱스 값을 1개 지우는 splice
+          bulletList.splice(i, 1);
+          //하나를 지울 경우 length가 줄어들기 때문에 i--를 해줬음
+          i--;
+        }
+      }
+    }
+  }
 };
 
 // 적 Ship들을 probWeight와 gameLevel값에 따라 랜덤하게 생성하는 함수
@@ -194,6 +236,33 @@ const drawAllEnemies = () => {
   createNewEnemy(30, gameLevel);
 };
 
+// 총알을 발사하는 함수
+const fire = () => {
+  // 총알을 발사할 수 없는 경우 return해서 함수 종료
+  if (!canFire) return;
+  // 총알 배열에 플레이어 Ship을 기준으로 총알의 x, y 값을 넣어줌
+  bulletList.push({ x: ship.x + 20, y: ship.y });
+  // 총알이 무한 발사되지 않게 canFire을 false로 설정하고
+  canFire = false;
+  // setTimeout을 사용해서 0.5초 뒤에 canFire이 true가 되게 함.
+  setTimeout(() => {
+    canFire = true;
+  }, 500);
+};
+
+// 총알을 그리는 함수
+const drawBullet = () => {
+  // 모든 총알에 대해 반복하면서
+  for (const bullet of bulletList) {
+    // 그릴 때마다  총알의 y 값을 -10만큼 설정해줌
+    bullet.y -= 10;
+    // 만약 canvas의 height을 넘어서지 않을 경우에만 총알을 그려줌
+    if (bullet.y + bulletSize <= canvas.height) {
+      ctx.drawImage(bulletImg, bullet.x, bullet.y, bulletSize, bulletSize);
+    }
+  }
+};
+
 // canvas에 그림을 그려주는 함수
 const draw = () => {
   // canvas를 비움
@@ -218,6 +287,17 @@ const draw = () => {
     // downPressed가 true이고, 플레이어 Ship이 canvas의 height를 초과하지 않을 경우 y좌표를 이동
     ship.y += 7;
   }
+
+  // space가 눌렸을 경우에 총알을 발사하게 하는 fire함수를 실행
+  if (spacePressed) {
+    fire();
+  }
+
+  // 총알을 그려주는 drawBullet함수를 실행
+  drawBullet();
+
+  // 총알과 적들이 부딪혔을 경우 둘다 사라지게 하는 함수
+  crashedByBullet();
 
   // draw가 실행 될 때마다 score를 1씩 증가시킴
   score += 1;

@@ -1,11 +1,17 @@
+/* 구글 폰트 가져오는 코드 */
 @import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap");
 
+/* *(전체 선택자)는 모든 형태의 모든 요소를 선택합니다. */
 * {
+  /* 내부여백과 외부 여백을 0으로 설정 */
   margin: 0;
   padding: 0;
+  /* border box는 width 와 height 속성이 안쪽 여백과 테두리는 포함하고, 바깥 여백은 포함하지 않게 한다. */
   box-sizing: border-box;
+  /* font-family는 폰트를 적용시킴, Black Han Sans가 없을 경우 sans-serif 적용 */
   font-family: "Black Han Sans", sans-serif;
 }
+
 body {
   background: white;
 }
