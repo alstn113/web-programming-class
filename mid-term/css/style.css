@@ -12,11 +12,13 @@
   font-family: "Black Han Sans", sans-serif;
 }
 
+/* body 태그에 대해 배경 색을 흰색으로 적용 */
 body {
-  background: white;
+  background: #fff;
 }
 
-Header {
+/* header태그에 대해 배경색을 gray로 적용 */
+header {
   background: gray;
 }
 
@@ -70,6 +72,7 @@ canvas {
 
 .playModal {
   position: fixed;
+  display: flex;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -77,11 +80,21 @@ canvas {
   background-color: aliceblue;
   padding: 2rem;
   border-radius: 1rem;
+  width: 700px;
+  height: 300px;
+}
+
+.playRule {
+  width: 100%;
+}
+
+.playButton {
+  width: 100%;
 }
 
 .playModal button {
-  font-size: 3rem;
-  border-radius: 2rem;
+  font-size: 1rem;
+  border-radius: 1rem;
   background: #72a259;
   color: #fff;
   padding: 1rem;

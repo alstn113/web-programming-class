@@ -39,9 +39,18 @@
     </main>
     <!-- 게임 방법과 게임 시작에 대한 모달창 -->
     <div class="playModal">
-      <div>게임 방법</div>
-      <div><input type="text" id="playerName" maxlength="10" placeholder="사용자 이름 입력" /></div>
-      <button onclick="start()">게임 시작</button>
+      <div class="playRule">
+        <h2>게임 방법</h2>
+        <hr />
+        <h3>이동 : 방향키</h3>
+        <h3>총알 발사 : 스페이스바</h3>
+        <span>적들을 부수거나 피해서</span>
+        <span>점수를 높이자</span>
+      </div>
+      <div class="playButton">
+        <div><input type="text" id="playerName" maxlength="10" placeholder="사용자 이름 입력" /></div>
+        <button onclick="start()">게임 시작</button>
+      </div>
     </div>
     <!-- footer 태그를 이용해서 페이지의 꼬릿말 부분을 시멘틱하게 나타냄 -->
     <footer>
