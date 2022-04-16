@@ -18,22 +18,22 @@
   <body>
     <!-- header 태그를 이용해서 페이지의 제목부분을 시멘틱하게 나타냄 -->
     <header>
-      <h1 class="title"><i class="fas fa-gamepad"></i> MIDTERM PROJECT <i class="fas fa-gamepad"></i></h1>
+      <h1><i class="fas fa-gamepad"></i> MIDTERM PROJECT <i class="fas fa-gamepad"></i></h1>
     </header>
     <!-- main태그는 페이지의 주요한 내용을 담고 있음 -->
     <main>
       <!-- 랭킹 부분이 들어가는 왼쪽 aside태그 -->
       <aside>
-        <div><i class="fas fa-trophy"></i> 랭킹</div>
+        <h2><i class="fas fa-trophy"></i> 랭킹</h2>
         <div id="rank"></div>
       </aside>
       <!-- 슈팅게임이 들어가는 canvas부분 -->
       <canvas id="gameCanvas" width="1000" height="500"></canvas>
       <!-- 점수와 현재 난이도 부분이 들어가는 오른쪽 aside태그 -->
       <aside>
-        <div><i class="fas fa-coins"></i> 점수</div>
+        <h2><i class="fas fa-coins"></i> 점수</h2>
         <div id="score"></div>
-        <div><i class="fas fa-star"></i> 현재 난이도</div>
+        <h2><i class="fas fa-star"></i> 현재 난이도</h2>
         <div id="difficulty"></div>
       </aside>
     </main>
@@ -44,11 +44,16 @@
         <hr />
         <h3>이동 : 방향키</h3>
         <h3>총알 발사 : 스페이스바</h3>
-        <span>적들을 부수거나 피해서</span>
-        <span>점수를 높이자</span>
+        <div>적들을 부수거나 피해서</div>
+        <div>점수를 높이자!</div>
+        <div>랭킹은 5등이내만 표시됩니다.</div>
+        <div>시간이 지날수록 난이도가 상승합니다.</div>
       </div>
       <div class="playButton">
+        <div>사용자의 이름을 입력해주세요.</div>
+        <div>랭킹에 이름으로 등록됩니다.</div>
         <div><input type="text" id="playerName" maxlength="10" placeholder="사용자 이름 입력" /></div>
+        <div>아래의 [게임시작]버튼을 눌러서 시작해주세요.</div>
         <button onclick="start()">게임 시작</button>
       </div>
     </div>

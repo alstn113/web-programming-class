@@ -1,5 +1,5 @@
 /* 구글 폰트 가져오는 코드 */
-@import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Single+Day&display=swap");
 
 /* *(전체 선택자)는 모든 형태의 모든 요소를 선택합니다. */
 * {
@@ -8,13 +8,35 @@
   padding: 0;
   /* border box는 width 와 height 속성이 안쪽 여백과 테두리는 포함하고, 바깥 여백은 포함하지 않게 한다. */
   box-sizing: border-box;
-  /* font-family는 폰트를 적용시킴, Black Han Sans가 없을 경우 sans-serif 적용 */
-  font-family: "Black Han Sans", sans-serif;
+  /* font-family는 폰트를 적용시킴, Single Day가 없을 경우 sans-serif 적용 */
+  font-family: "Single Day", sans-serif;
 }
 
 /* body 태그에 대해 배경 색을 흰색으로 적용 */
 body {
-  background: #fff;
+  background: #000;
+}
+
+/* 배경을 움직이게하는 애니메이션, x-position과 y-position에 대해서 설정할 수 있다
+0%부터 시작해서 100%가 될 때까지 y-position이 백그라운드 height인 500px까지 움직이게 했다 */
+@keyframes backgroundMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 500px;
+  }
+}
+
+/* 배경이미지 경로를 정하고 애니메이션으로 keyframe인 backgroundMove를 설정했다.
+/* 그리고 2초 동안 진행되게 하고 무한히 반복되게 설정했다. 또한 선형시간으로 설정했다 */
+canvas {
+  background-image: url("../img/background.png");
+  animation: backgroundMove 2s infinite linear;
+  background-size: auto 100%;
+  display: block;
+  /* margin으로 가운데 정렬 */
+  margin: 0 auto;
 }
 
 /* header태그에 대해 배경색을 gray로 적용 */
@@ -22,26 +44,35 @@ header {
   background: gray;
 }
 
-.title {
-  color: black;
+/* header태그의 하위 h1태그에 대한 선택자 */
+header h1 {
+  color: #fff;
   text-align: center;
   font-size: 4rem;
 }
 
+/* header와 footer의 제외한 부분이 다 들어가 있음  */
+/* 전체적으로 color를 white로 설정하고 display:flex로 설정함 */
+main {
+  display: flex;
+  color: #fff;
+}
+
+/* 양쪽 랭킹과 점수 표시판에 대한 css */
 aside {
-  font-size: 1rem;
+  font-size: 1.5rem;
   background: #2b2b2b;
+  /* width: 100%로 하여 canvas를 제외한 가용너비에 따라 변함 */
   width: 100%;
   text-align: center;
   padding-top: 1rem;
 }
 
-main {
-  display: flex;
-  color: #fff;
-  list-style-type: none;
+aside h2 {
+  margin: 1rem;
 }
 
+/* position을 absolute로 하고, bottom:0, left:0으로 하여 바닥에 붙임 */
 footer {
   position: absolute;
   bottom: 0;
@@ -53,23 +84,8 @@ footer {
   text-align: center;
 }
 
-@keyframes backgroundMove {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 500px;
-  }
-}
-
-canvas {
-  background-image: url("../img/background.png");
-  animation: backgroundMove 2s infinite linear;
-  background-size: auto 100%;
-  display: block;
-  margin: 0 auto;
-}
-
+/* 게임 시작 모달을 top과 left에 50%로 해서 position fix로 설정 */
+/* 이렇게만 하면 x,y축 기준이 왼쪽, 오른쪽으로 가게되어서 transform으로 x축과 y축을 50%만큼 땡겨줌 */
 .playModal {
   position: fixed;
   display: flex;
@@ -84,22 +100,46 @@ canvas {
   height: 300px;
 }
 
-.playRule {
-  width: 100%;
-}
-
+/* .playRule과 .playButton 두개에 css를 적용 */
+.playRule,
 .playButton {
+  /* display를 flex로 설정하고 방향을 열방향으로 함 */
+  display: flex;
+  flex-direction: column;
+  /* 플렉스 요소의 수직 방향 정렬 방식을 center로 설정 */
+  align-items: center;
+  /* 플렉스 요소의 수평 방향 정렬 방식을 space-between으로 설정하여 요소들의 간격을 동일하게 설정 */
+  justify-content: space-between;
   width: 100%;
 }
 
-.playModal button {
-  font-size: 1rem;
-  border-radius: 1rem;
-  background: #72a259;
-  color: #fff;
-  padding: 1rem;
+/* .playModal button과 .playRule h2 두개 css를 적용 */
+.playModal button,
+.playRule h2 {
+  font-size: 1.5rem;
+  color: #000;
+  background: gray;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
 }
 
+/* 마우를 올리면 커서가 포인터 모양으로 변함 */
+.playButton button {
+  cursor: pointer;
+}
+
+/* play모달 창에서 사용자 이름을 입력받는 부분 */
+.playButton input#playerName {
+  font-size: 1.5rem;
+  color: #000;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background: #fff;
+  border: 2px solid #000;
+}
+
+/* play모달창이 보이게 할지 안보이게 할지에 대한 클래스 */
 .active {
   visibility: hidden;
 }
